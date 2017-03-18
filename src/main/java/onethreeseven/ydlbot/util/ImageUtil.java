@@ -2,14 +2,13 @@ package onethreeseven.ydlbot.util;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.io.File;
-import java.nio.ByteBuffer;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -35,13 +34,14 @@ public class ImageUtil {
         robot = robo;
     }
 
-    public static Mat getFrame(){
-        BufferedImage bi = robot.createScreenCapture(screenDims);
-        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
+    public static BufferedImage getScreenShot(){
+        return robot.createScreenCapture(screenDims);
+    }
 
+    public static byte[] getBGRScreenShot(){
+        BufferedImage bi = getScreenShot();
         DataBufferInt pixelBuf = ((DataBufferInt) bi.getRaster().getDataBuffer());
         byte[] data = new byte[3 * pixelBuf.getSize()];
-
         int i = 0;
         for (int[] bank : pixelBuf.getBankData()) {
             for (int pixel : bank) {
@@ -54,10 +54,32 @@ public class ImageUtil {
                 i++;
             }
         }
-        mat.put(0, 0, data);
+        return data;
+    }
+
+    public static Mat getOpenCVScreenShot(){
+        Mat mat = new Mat(screenDims.height, screenDims.width, CvType.CV_8UC3);
+        byte[] bgr = getBGRScreenShot();
+        mat.put(0, 0, bgr);
         return mat;
     }
 
+    public static File writeBGRImage(byte[] bgrPixels){
+        BufferedImage bi = new BufferedImage(screenDims.width, screenDims.height, BufferedImage.TYPE_3BYTE_BGR);
+        byte[] bytes = ( (DataBufferByte) bi.getRaster().getDataBuffer() ).getData();
+        System.arraycopy(bgrPixels, 0, bytes, 0, bgrPixels.length);
+        File outFile = new File("testImage.png");
+        if(outFile.exists() && outFile.delete()){
+            System.out.println("Deleted temp file before writing a new one.");
+        }
+        try {
+            ImageIO.write(bi, "PNG", outFile);
+            System.out.println("Temp file written to: " + outFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outFile;
+    }
 
 
 }

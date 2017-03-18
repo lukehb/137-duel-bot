@@ -6,13 +6,9 @@ import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.objdetect.CascadeClassifier;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
 
 
 /**
@@ -28,7 +24,7 @@ public class DuelistLocator {
 //            new CascadeClassifier(getClass().getResource("/lbpcascade_frontalface.xml").getPath());
 //
 //    public void findDuelist(){
-//        Mat frame = ImageUtil.getFrame();
+//        Mat frame = ImageUtil.getOpenCVScreenShot();
 //        // Detect faces in the image.
 //        MatOfRect detections = new MatOfRect();
 //        detector.detectMultiScale(frame, detections);
@@ -57,7 +53,7 @@ public class DuelistLocator {
 
     public void findDuelist(){
         //get the duel links scene and descriptors
-        Mat frame = ImageUtil.getFrame();
+        Mat frame = ImageUtil.getOpenCVScreenShot();
         Mat frameDescriptors = getDescriptors(frame);
         //find matches of the duelist image in the scene
         List<MatOfDMatch> matches = new ArrayList<>();
