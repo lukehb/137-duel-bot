@@ -17,6 +17,9 @@ import static org.opencv.imgcodecs.Imgcodecs.CV_LOAD_IMAGE_COLOR;
  */
 public class DuelistLocator {
 
+    /**
+     * Very heuristic skin color detection, will it work on Odion?
+     */
     private static final int colR = 204;
     private static final int colG = 170;
     private static final int colB = 145;
@@ -51,15 +54,7 @@ public class DuelistLocator {
     }
 
     public void findDuelist(){
-//        //get the frame and convert it black and white threshold
-//        Mat frame = ImageUtil.getOpenCVScreenShot();
-//        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
 
-        //get the scene image
-
-
-        //"C:\\Users\\luke\\Desktop\\test_1.jpg";
-        //"C:\\Users\\luke\\Desktop\\mask.png";
         //keep the raw image (in color) because we do skin matching on it
         Mat raw = Imgcodecs.imread(testFilePath, CV_LOAD_IMAGE_COLOR);
         //mask out most of the screen, only want duelist area
